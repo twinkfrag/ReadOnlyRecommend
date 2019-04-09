@@ -10,19 +10,83 @@ namespace ReadOnlyRecommend
 	{
 		static void Main(string[] args)
 		{
-			var inputfile = args.Length > 0 ? args[0] : Console.ReadLine();
-			var path = new FileInfo(Path.Join(Environment.GetEnvironmentVariable("TEMP"), inputfile));
+			bool isYes = false;
+			string inputfile = null;
+
+			foreach (var arg in args)
+			{
+				if (arg.ToLower().Trim('-', '/') == "y")
+				{
+					isYes = true;
+				}
+				else
+				{
+					inputfile = arg;
+				}
+			}
+
+			inputfile = string.IsNullOrEmpty(inputfile) ? Console.ReadLine().Trim('"') : inputfile;
+
+			var path = new FileInfo(inputfile);
+			if (!path.Exists)
+			{
+				path = new FileInfo(Path.Combine(Environment.GetEnvironmentVariable("TEMP"), inputfile));
+			}
+			if (!path.Exists)
+			{
+				Console.WriteLine($"File {inputfile} is not found.");
+				return;
+			}
 
 			switch (path.Extension)
 			{
 				case ".docx":
-					WordOverwrite(path);
+					Console.Write($"Edit Word File: {path.FullName}");
+					if (isYes)
+					{
+						Console.WriteLine(" .");
+					}
+					else
+					{
+						Console.WriteLine(" ? [Y/n]");
+						isYes = Console.ReadLine() != "n";
+					}
+					if (isYes)
+					{
+						WordOverwrite(path);
+					}
 					break;
 				case ".xlsx":
-					ExcelOverwrite(path);
+					Console.Write($"Edit Excel File: {path.FullName}");
+					if (isYes)
+					{
+						Console.WriteLine(" .");
+					}
+					else
+					{
+						Console.WriteLine(" ? [Y/n]");
+						isYes = Console.ReadLine() != "n";
+					}
+					if (isYes)
+					{
+						ExcelOverwrite(path);
+					}
 					break;
 				case ".pptx":
-					PowerPointOverwrite(path);
+					Console.Write($"Edit PowerPoint File: {path.FullName}");
+					if (isYes)
+					{
+						Console.WriteLine(" .");
+					}
+					else
+					{
+						Console.WriteLine(" ? [Y/n]");
+						isYes = Console.ReadLine() != "n";
+					}
+					if (isYes)
+					{
+						PowerPointOverwrite(path);
+					}
 					break;
 				default:
 					break;
