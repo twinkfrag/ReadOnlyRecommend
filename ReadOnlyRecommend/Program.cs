@@ -6,9 +6,9 @@ using System.Xml.XPath;
 
 namespace ReadOnlyRecommend
 {
-	class Program
+	public class Program
 	{
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{
 			bool isYes = false;
 			string inputfile = null;
@@ -35,6 +35,11 @@ namespace ReadOnlyRecommend
 			if (!path.Exists)
 			{
 				Console.WriteLine($"File {inputfile} is not found.");
+				return;
+			}
+			if (path.Length == 0L)
+			{
+				Console.WriteLine($"File {inputfile} is empty.");
 				return;
 			}
 
